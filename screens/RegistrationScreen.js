@@ -1,33 +1,58 @@
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { auth, firestore } from '../firebase'
+import { auth, firestore } from '../firebase/firebase'
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [fullName, setFullName] = useState('')
 
   const navigation = useNavigation()
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        navigation.replace("Home")
-      }
-    })
+  // useEffect(() => {
+  //   const unsubscribe = auth.onAuthStateChanged(user => {
+  //     if (user) {
+  //       navigation.replace("Home")
+  //     }
+  //   })
 
-    return unsubscribe
-  }, [])
+  //   return unsubscribe
+  // }, [])
 
   const handleSignUp = () => {
+    // auth
+    //   .createUserWithEmailAndPassword(email, password)
+    //   .then(userCredentials => {
+    //     const user = userCredentials.user;
+    //     console.log('Registered with:', user.email);
+    //   })
+    //   .catch(error => alert(error.message))
     auth
       .createUserWithEmailAndPassword(email, password)
-      .then(userCredentials => {
-        const user = userCredentials.user;
-        console.log('Registered with:', user.email);
+      .then((response) => {
+          const uid = response.user.uid
+          const data = {
+              id: uid,
+              email,
+              fullName,
+          };
+          const usersRef = firestore.collection('users')
+          usersRef
+              .doc(uid)
+              .set(data)
+              .then(() => {
+                  navigation.replace('Home', {user: data})
+              })
+              .catch((error) => {
+                  alert(error)
+              });
       })
-      .catch(error => alert(error.message))
-  }
+      .catch((error) => {
+          alert(error)
+  });
+}
 
   return (
     <KeyboardAvoidingView
@@ -35,6 +60,13 @@ const LoginScreen = () => {
       behavior="padding"
     >
       <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Full Name"
+          value={fullName}
+          onChangeText={text => setFullName(text)}
+        //   onChangeText={() => {}}
+          style={styles.input}
+        />
         <TextInput
           placeholder="Email"
           value={email}
@@ -46,6 +78,14 @@ const LoginScreen = () => {
           placeholder="Password"
           value={password}
           onChangeText={text => setPassword(text)}
+        //   onChangeText={() => {}}
+          style={styles.input}
+          secureTextEntry
+        />
+        <TextInput
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={text => setConfirmPassword(text)}
         //   onChangeText={() => {}}
           style={styles.input}
           secureTextEntry

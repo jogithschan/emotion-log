@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { auth } from '../firebase'
+import { auth, firestore } from '../firebase/firebase'
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
@@ -30,17 +30,33 @@ const LoginScreen = () => {
 //   }
 
   const handleSignUp = () =>{
-    navigation.replace("Registration")
+    navigation.navigate("Registration")
   }
 
   const handleLogin = () => {
     auth
       .signInWithEmailAndPassword(email, password)
-      .then(userCredentials => {
-        const user = userCredentials.user;
-        console.log('Logged in with:', user.email);
+      .then((response) => {
+        const uid = response.user.uid
+        const usersRef = firestore.collection('users')
+        usersRef
+            .doc(uid)
+            .get()
+            .then(firestoreDocument => {
+                if (!firestoreDocument.exists) {
+                    alert("User does not exist anymore.")
+                    return;
+                }
+                const user = firestoreDocument.data()
+                navigation.navigate('Home', {user})
+            })
+            .catch(error => {
+                alert(error)
+            });
       })
-      .catch(error => alert(error.message))
+      .catch(error => {
+        alert(error)
+    })
   }
 
   return (
