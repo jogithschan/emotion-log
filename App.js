@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import RegistrationScreen from './screens/RegistrationScreen'
+import QuestionsScreen from './screens/QuestionsScreen'
 import { COLORS, icons, images, SIZES } from './constants'
 import { ScreenHeaderBtn } from './components/header/ScreenHeaderBtn'
 import { auth, firestore } from './firebase/firebase'
@@ -27,6 +28,7 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
         <Stack.Screen name="Registration" component={RegistrationScreen} />  
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Questions" component={QuestionsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
