@@ -14,17 +14,27 @@ const QuestionCard = ({ question, onSaveResponse }) => {
   };
 
   return (
-    <View style={{ margin: 20 }}>
+    <View style={{ marginLeft: 10, marginRight: 10 }}>
       <Text style={{ fontSize: 18, marginBottom: 10 }}>{question}</Text>
       <Text style={{ fontSize: 16 }}>{`Selected Value: ${response}`}</Text>
+
+      {/* Text labels for each end of the Slider */}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10 }}>
+        <Text>-3</Text>
+        <Text>3</Text>
+      </View>
+
       <Slider
-        style={{ width: '80%', marginTop: 10 }}
+        style={{ width: 370, marginTop: 10 }}
         minimumValue={-3}
         maximumValue={3}
         step={1}
         value={response}
         onValueChange={(value) => setResponse(value)}
+        minimumTrackTintColor="#3498db" // Color for the left side of the thumb
+        maximumTrackTintColor="#d3d3d3" // Color for the right side of the thumb
       />
+
       <Button title="Save Response" onPress={handleSaveResponse} />
     </View>
   );
@@ -35,11 +45,12 @@ const QuestionsScreen = () => {
   const navigation = useNavigation();
 
   const questionsArray = [
-    'What is your favorite color?',
-    'How often do you exercise?',
-    'Rate your satisfaction with our service.',
-    'What is your preferred mode of transportation?',
-    'Do you enjoy outdoor activities?',
+    'My Emotion right before doing this survey was',
+    'My Emotion right before doing this survey was',
+    'My Attention level right before doing this survey could be rated as',
+    'My Stress level right before doing this survey was',
+    'Answering this survey disturbed my current activity',
+    'How did your emotions change while you are answering the survey now?',
   ];
 
   const [responses, setResponses] = useState({});
@@ -57,11 +68,7 @@ const QuestionsScreen = () => {
 
   const handleSaveResponse = (response) => {
     const updatedResponses = { ...responses };
-    updatedResponses[`question${currentIndex + 1}`] = {
-      value: response,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      user: user.uid, // assuming user object contains uid
-    };
+    updatedResponses[`question${currentIndex + 1}`] = response;
     setResponses(updatedResponses);
 
     if (currentIndex < questionsArray.length - 1) {
@@ -74,7 +81,12 @@ const QuestionsScreen = () => {
 
   const saveResponsesToFirestore = (responses) => {
     firestore.collection('userResponses')
-      .add(responses)
+      .add({
+        responses: responses,
+        userID: user.uid,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        responseZero: responses['question1'],
+      })
       .then((docRef) => {
         console.log('Responses saved with ID: ', docRef.id);
       })

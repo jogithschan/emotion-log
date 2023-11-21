@@ -5,62 +5,61 @@ import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [userResponses, setUserResponses] = useState([]);
-  const userID = auth.currentUser
+  
+  const [entityText, setEntityText] = useState('')
+  const [entities, setEntities] = useState([])
+
+  const entityRef = firestore.collection('userResponses')
+  const userID = auth.currentUser?.uid
 
   useEffect(() => {
-    const fetchUserResponses = async () => {
-      try {
-        const db = firebase.firestore();
-        const userResponsesRef = db.collection('userResponses');
+    entityRef
+        .where("userID", "==", userID)
+        .orderBy('timestamp', 'desc')
+        .onSnapshot(
+            querySnapshot => {
+                const newEntities = []
+                querySnapshot.forEach(doc => {
+                    const entity = doc.data()
+                    entity.id = doc.id
+                    newEntities.push(entity)
+                });
+                setEntities(newEntities)
+            },
+            error => {
+                console.log(error)
+            }
+        )
+}, [])
 
-        const snapshot = await userResponsesRef.where('userID', '==', userID).get();
-
-        const responses = [];
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          responses.push({
-            id: doc.id,
-            timestamp: data.timestamp ? data.timestamp.toDate() : null,
-            question1Response: data.question1,
-          });
-        });
-
-        setUserResponses(responses);
-      } catch (error) {
-        console.error('Error fetching user responses:', error);
-        // Handle the error or set an appropriate state to indicate the error
-      }
-  };
-
-    fetchUserResponses();
-  }, [userID]);
-
-  const renderUserResponse = ({ item }) => {
+  const renderEntity = ({ item }) => {
     return (
       <TouchableOpacity style={styles.cardContainer}>
-        <Text>Date: {item.timestamp ? item.timestamp.toLocaleDateString() : 'N/A'}</Text>
-        <Text>Time: {item.timestamp ? item.timestamp.toLocaleTimeString() : 'N/A'}</Text>
-        <Text>Response to first question: {item.question1Response}</Text>
+        <Text>Date: {item.timestamp ? item.timestamp.toDate().toLocaleDateString() : 'N/A'}</Text>
+        <Text>Time: {item.timestamp ? item.timestamp.toDate().toLocaleTimeString() : 'N/A'}</Text>
+        <Text>Response: {item.responseZero}</Text>
       </TouchableOpacity>
     );
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Questions')}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Create Entry</Text>
-      </TouchableOpacity>
-
+      <View>
+        <TouchableOpacity
+            onPress={() => navigation.navigate('Questions')}
+            style={styles.button}
+        >
+            <Text style={styles.buttonText}>Create Entry</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.listContainer}>
       <FlatList
-        data={userResponses}
-        renderItem={renderUserResponse}
+        data={entities}
+        renderItem={renderEntity}
         keyExtractor={(item) => item.id}
         style={styles.flatList}
       />
+      </View> 
     </View>
   );
 };
@@ -69,14 +68,31 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'center',
-      padding: 20,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        height: 80,
+        marginTop: 40,
+        marginBottom: 5,
+        flex: 1,
+        paddingTop: 40,
+        paddingBottom: 10,
+        paddingLeft: 30,
+        paddingRight: 30,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    listContainer: {
+        marginTop: 20,
+        padding: 20,
     },
     button: {
       backgroundColor: '#3498db',
       padding: 10,
       borderRadius: 5,
       marginBottom: 20,
+      marginTop: 20,
+
     },
     buttonText: {
       color: 'white',
@@ -89,7 +105,7 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       padding: 10,
       marginBottom: 10,
-      width: '100%', // Ensure the width occupies the entire space
+      width: 380, // Ensure the width occupies the entire space
     },
     flatList: {
       width: '100%',
