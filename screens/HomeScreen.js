@@ -1,121 +1,99 @@
-import { useNavigation } from '@react-navigation/core'
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, TextInput, FlatList, Keyboard } from 'react-native'
-import { auth, firestore, firebase } from '../firebase/firebase'
-import QuestionsScreen from './QuestionsScreen'
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { firebase, auth, firestore } from '../firebase/firebase'
+import { useNavigation } from '@react-navigation/native';
 
-export default function HomeScreen(props) {
-  const navigation = useNavigation()
-
-  const handleSignOut = () => {
-    auth
-      .signOut()
-      .then(() => {
-        navigation.replace("Login")
-      })
-      .catch(error => alert(error.message))
-  }
-
-  const [entities, setEntities] = useState([])
-
-  const entityRef = firestore.collection('entities')
-  const user = auth.currentUser
-  const userID = user.uid
+const HomeScreen = () => {
+  const navigation = useNavigation();
+  const [userResponses, setUserResponses] = useState([]);
+  const userID = auth.currentUser
 
   useEffect(() => {
-    entityRef
-      .where("authorID", "==", userID)
-      .orderBy('createdAt', 'desc')
-      .onSnapshot(
-        querySnapshot => {
-          const newEntities = []
-          querySnapshot.forEach(doc => {
-            const entity = doc.data()
-            entity.id = doc.id
-            newEntities.push(entity)
+    const fetchUserResponses = async () => {
+      try {
+        const db = firebase.firestore();
+        const userResponsesRef = db.collection('userResponses');
+
+        const snapshot = await userResponsesRef.where('userID', '==', userID).get();
+
+        const responses = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          responses.push({
+            id: doc.id,
+            timestamp: data.timestamp ? data.timestamp.toDate() : null,
+            question1Response: data.question1,
           });
-          setEntities(newEntities)
-        },
-        error => {
-          console.log(error)
-        }
-      )
-  }, [])
+        });
 
-  const renderEntity = ({ item, index }) => {
+        setUserResponses(responses);
+      } catch (error) {
+        console.error('Error fetching user responses:', error);
+        // Handle the error or set an appropriate state to indicate the error
+      }
+  };
+
+    fetchUserResponses();
+  }, [userID]);
+
+  const renderUserResponse = ({ item }) => {
     return (
-      <View style={styles.entityContainer}>
-        <Text style={styles.entityText}>
-          {item.text}
-        </Text>
-      </View>
-    )
-  }
-
-  const navigateToQuestions = () => {
-    navigation.navigate('Questions')
-  }
+      <TouchableOpacity style={styles.cardContainer}>
+        <Text>Date: {item.timestamp ? item.timestamp.toLocaleDateString() : 'N/A'}</Text>
+        <Text>Time: {item.timestamp ? item.timestamp.toLocaleTimeString() : 'N/A'}</Text>
+        <Text>Response to first question: {item.question1Response}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={navigateToQuestions}
+        onPress={() => navigation.navigate('Questions')}
         style={styles.button}
       >
-        <Text style={styles.buttonText}>Start Questions</Text>
+        <Text style={styles.buttonText}>Create Entry</Text>
       </TouchableOpacity>
 
-      {entities && (
-        <View style={styles.listContainer}>
-          <FlatList
-            data={entities}
-            renderItem={renderEntity}
-            keyExtractor={(item) => item.id}
-            removeClippedSubviews={true}
-          />
-        </View>
-      )}
-      <Text>Email: {auth.currentUser?.email}</Text>
-      <TouchableOpacity
-        onPress={handleSignOut}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Sign out</Text>
-      </TouchableOpacity>
+      <FlatList
+        data={userResponses}
+        renderItem={renderUserResponse}
+        keyExtractor={(item) => item.id}
+        style={styles.flatList}
+      />
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center'
-  },
-  button: {
-    height: 47,
-    borderRadius: 5,
-    backgroundColor: '#788eec',
-    width: 200,
-    alignItems: "center",
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16
-  },
-  listContainer: {
-    marginTop: 20,
-    padding: 20,
-  },
-  entityContainer: {
-    marginTop: 16,
-    borderBottomColor: '#cccccc',
-    borderBottomWidth: 1,
-    paddingBottom: 16
-  },
-  entityText: {
-    fontSize: 20,
-    color: '#333333'
-  }
-})
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 20,
+    },
+    button: {
+      backgroundColor: '#3498db',
+      padding: 10,
+      borderRadius: 5,
+      marginBottom: 20,
+    },
+    buttonText: {
+      color: 'white',
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    cardContainer: {
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 5,
+      padding: 10,
+      marginBottom: 10,
+      width: '100%', // Ensure the width occupies the entire space
+    },
+    flatList: {
+      width: '100%',
+    },
+  });
+
+export default HomeScreen;

@@ -35,12 +35,11 @@ const QuestionsScreen = () => {
   const navigation = useNavigation();
 
   const questionsArray = [
-    'My Emotion right before doing this survey was',
-    'My Emotion right before doing this survey was',
-    'My Attention level right before doing this survey could be rated as',
-    'My Stress level right before doing this survey was',
-    'Answering this survey disturbed my current activity',
-    'How did your emotions change while responding to this survey right now',
+    'What is your favorite color?',
+    'How often do you exercise?',
+    'Rate your satisfaction with our service.',
+    'What is your preferred mode of transportation?',
+    'Do you enjoy outdoor activities?',
   ];
 
   const [responses, setResponses] = useState({});
@@ -57,10 +56,14 @@ const QuestionsScreen = () => {
   }, [currentIndex, questionsArray.length, responses, navigation]);
 
   const handleSaveResponse = (response) => {
-    const updatedResponses = [...responses];
-    updatedResponses[currentIndex] = response;
+    const updatedResponses = { ...responses };
+    updatedResponses[`question${currentIndex + 1}`] = {
+      value: response,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      user: user.uid, // assuming user object contains uid
+    };
     setResponses(updatedResponses);
-  
+
     if (currentIndex < questionsArray.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
@@ -68,35 +71,17 @@ const QuestionsScreen = () => {
       navigation.navigate('Home'); // Navigate back to HomeScreen after completing questions
     }
   };
-  
+
   const saveResponsesToFirestore = (responses) => {
-    const db = firebase.firestore();
-    const batch = db.batch();
-    const userResponsesRef = db.collection('userResponses').doc();
-  
-    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-  
-    const finalResponses = responses.reduce((acc, response, index) => {
-      acc[`question${index + 1}`] = response;
-      return acc;
-    }, {});
-  
-    batch.set(userResponsesRef, {
-      ...finalResponses,
-      userID: user.uid,
-      timestamp,
-    });
-  
-    batch.commit()
-      .then(() => {
-        console.log('Responses saved successfully');
-        navigation.navigate('Home'); // Navigate to HomeScreen after saving
+    firestore.collection('userResponses')
+      .add(responses)
+      .then((docRef) => {
+        console.log('Responses saved with ID: ', docRef.id);
       })
       .catch((error) => {
         console.error('Error saving responses:', error);
       });
   };
-  
 
   return (
     <View>
