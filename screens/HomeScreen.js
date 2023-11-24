@@ -82,10 +82,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    listContainer: {
-        marginTop: 20,
-        padding: 20,
-    },
     button: {
       backgroundColor: '#3498db',
       padding: 10,
@@ -99,13 +95,34 @@ const styles = StyleSheet.create({
       fontSize: 18,
       fontWeight: 'bold',
     },
-    cardContainer: {
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 5,
-      padding: 10,
-      marginBottom: 10,
-      width: 380, // Ensure the width occupies the entire space
+    listContainer: {
+      width: 250,
+      padding: SIZES.xLarge,
+      backgroundColor: "#FFF",
+      borderRadius: SIZES.medium,
+      justifyContent: "space-between",
+      ...SHADOWS.medium,
+      shadowColor: COLORS.white,
+    },
+    iconContainer: {
+      width: 50,
+      height: 50,
+      backgroundColor: COLORS.white,
+      borderRadius: SIZES.medium,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    logoImage: {
+      width: "70%",
+      height: "70%",
+    },
+    companyName: {
+      fontSize: SIZES.medium,
+      color: "#B3AEC6",
+      marginTop: SIZES.small / 1.5,
+    },
+    infoContainer: {
+      marginTop: SIZES.large,
     },
     flatList: {
       width: '100%',
