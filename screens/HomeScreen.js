@@ -216,7 +216,7 @@ const HomeScreen = () => {
         alignItems: 'left',
         justifyContent: 'left',
         width: screenWidth -20,
-        paddingBottom: 40
+        paddingBottom: 20
       },
       headerContainer: {
         flexDirection: 'row',

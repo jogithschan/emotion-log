@@ -8,7 +8,7 @@ import { SIZES } from '../constants';
 
 const screenWidth = Dimensions.get('window').width;
 
-const QuestionCard = ({ question, label1, label2, onSaveResponse }) => {
+const QuestionCard = ({ question, label1, label2, index, onSaveResponse }) => {
   const handleSaveResponse = () => {
     onSaveResponse(response); // Pass the response to the parent component
     setResponse(0); // Reset response after saving
@@ -110,6 +110,7 @@ const QuestionsScreen = () => {
     'Very Calm', 'Very Excited',
     'Very Bored', 'Very Engaged',
     'Not Stressed at all', 'Very Stressed',
+    'Change this', 'Change this too',
     'Entirely disagree', 'Entirely agree',
     'I felt more negative', 'I felt more positive'
   ]
