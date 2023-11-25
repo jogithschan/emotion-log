@@ -55,6 +55,16 @@ const HomeScreen = () => {
               }
           )
   }, [])
+
+  function formatDate(date) {
+    const options = { day: 'numeric', month: 'short' };
+    const formattedDate = date.toLocaleDateString(undefined, options);
+  
+    const day = date.getDate();
+    const suffix = day === 1 ? 'st' : day === 2 ? 'nd' : day === 3 ? 'rd' : 'th';
+  
+    return `${formattedDate}${suffix}`;
+  }
   
   const renderEntity = ({ item }) => {
     let imageUri = '';
@@ -82,11 +92,13 @@ const HomeScreen = () => {
           />
         </View>
         <View style={styles.textContainer}>
-          <Text style={styles.textFormat}>
-            Date: {item.timestamp ? item.timestamp.toDate().toLocaleDateString() : 'N/A'}
+        <Text style={styles.timeFormat}>
+            {item.timestamp
+                   ? item.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+                   : 'Your response has been recorded!'}
           </Text>
           <Text style={styles.textFormat}>
-            Time: {item.timestamp ? item.timestamp.toDate().toLocaleTimeString() : 'N/A'}
+            {item.timestamp ? formatDate(item.timestamp.toDate()) : ''}
           </Text>
           {/* Other text components can be added here */}
         </View>
@@ -107,7 +119,7 @@ const HomeScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.btnContainer}>
             <Image 
-              source={images.profile}
+              source={{ uri : 'https://placehold.co/500/orange/white/jpg'}}
               resizeMode="cover"
               style={styles.btnImg('100%')}
             />
@@ -177,6 +189,7 @@ const HomeScreen = () => {
         fontWeight: 'bold',
       },
       cardContainer: {
+        flex: 0,
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
@@ -201,8 +214,11 @@ const HomeScreen = () => {
         flex: 1,
       },
       textFormat: {
-        fontSize: 16,
-        // Add other text styles as needed
+        fontSize: SIZES.medium,
+        color: '#9f9f9f'
+      },
+      timeFormat: {
+        fontSize: SIZES.large
       },
       flatList: {
         width: screenWidth - 20,
