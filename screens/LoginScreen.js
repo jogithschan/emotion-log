@@ -38,7 +38,7 @@ const LoginScreen = () => {
       style={styles.container}
       behavior="padding"
     >
-      <View style={styles.inputContainer}>
+      {/* <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
           value={email}
@@ -54,20 +54,47 @@ const LoginScreen = () => {
           style={styles.input}
           secureTextEntry
         />
-      </View>
-
+      </View> */}
+      <SafeAreaView>
+        <View style={styles.container}>
+          <LinearGradient
+            colors={['#000', 'transparent']}
+            style={styles.background}
+          />
+          <View style={styles.header}>
+              <Image 
+              style = {{width: 50, height: 50, marginRight: 5, marginLeft: 5}}
+              source={require('../assets/images/onboardingScreenPerson1.png')}
+              />
+              <Text style={styles.boldText}>
+                I feel overwhelmed by the demands of work/school and find it hard to prioritize tasks effectively.
+              </Text>
+          </View>
+          <View style={{
+            justifyContent: 'center',
+            marginTop: '50%',
+            marginLeft: '2%',
+            // width: '90%',
+          }}>
+            <Text style={styles.baseText}>
+              Let's record together how you feel on day to day basis to better understand your psychological health.
+            </Text>
+          </View>
+        </View>
+      </SafeAreaView>
+      
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={handleLogin}
+          onPress={handleSignUp}
           style={styles.button}
         >
-          <Text style={styles.buttonText}>Login</Text>
+          <Text style={styles.buttonText}>New to the app? Register now.</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={handleSignUp}
+          onPress={handleLogin}
           style={[styles.button, styles.buttonOutline]}
         >
-          <Text style={styles.buttonOutlineText}>Register</Text>
+          <Text style={styles.buttonOutlineText}>Already have an account? Log in.</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -79,27 +106,64 @@ export default LoginScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  inputContainer: {
-    width: '80%'
-  },
-  input: {
+  header: {
     backgroundColor: 'white',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginTop: 5,
+    // padding: 20,
+    marginTop: 120,
+    paddingTop: 20,
+    paddingBottom: 20,
+    width: '95%',
+    borderRadius: '10px',
+    flexDirection: 'row',
   },
-  buttonContainer: {
-    width: '60%',
-    justifyContent: 'center',
+  boldText: {
+    fontWeight: 'medium',
+    flex: 1,
+    marginRight: 20,
+  },
+  baseText: {
+    fontWeight: 'bold',
+    fontSize: '20px',
+  },
+  container: {
+    flex: 1,
     alignItems: 'center',
-    marginTop: 40,
+    justifyContent: 'center',
+    backgroundColor: '#8368F1',
+  },
+  background: {
+    position: 'absolute',
+    left: -20,
+    right: -20,
+    top: -140,
+    height: 300,
+  },
+  quoteTextContainer: {
+    
+  },
+  // inputContainer: {
+  //   width: '90%'
+  // },
+  // input: {
+  //   backgroundColor: 'white',
+  //   paddingHorizontal: 15,
+  //   paddingVertical: 10,
+  //   borderRadius: 10,
+  //   marginTop: 5,
+  // },
+  buttonContainer: {
+    width: '90%',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    // marginTop: 600,
+    marginTop: 'auto',
+    marginBottom: 40,
   },
   button: {
-    backgroundColor: '#0782F9',
+    backgroundColor: '#000000',
     width: '100%',
     padding: 15,
     borderRadius: 10,
@@ -107,8 +171,8 @@ const styles = StyleSheet.create({
   },
   buttonOutline: {
     backgroundColor: 'white',
-    marginTop: 5,
-    borderColor: '#0782F9',
+    marginTop: 10,
+    borderColor: 'white',
     borderWidth: 2,
   },
   buttonText: {
@@ -117,7 +181,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonOutlineText: {
-    color: '#0782F9',
+    color: '#000',
     fontWeight: '700',
     fontSize: 16,
   },
