@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, Dimensions }
 import { firebase, auth, firestore } from '../firebase/firebase'
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONT, SHADOWS, SIZES, images, icons } from "../constants"
-import ActionButton from 'react-native-action-button';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const screenWidth = Dimensions.get('window').width;
@@ -146,10 +145,12 @@ const HomeScreen = () => {
           style={styles.flatList}
         />
         </View>
-        <ActionButton
-          buttonColor="rgba(102,204,153,1)"
-          onPress={() => navigation.navigate('Questions')}
-        /> 
+        <View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Annotation')}>
+            <Text>Add</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     );
 };
