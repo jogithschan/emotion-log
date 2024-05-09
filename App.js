@@ -30,12 +30,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
-        <Stack.Screen name="Registration" component={RegistrationScreen} />  
+        <Stack.Screen name="Registration" component={RegistrationScreen} />
+        <Stack.Screen options={{ headerShown: false }} name="HomePage" component={HomePage}/> 
         <Stack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
         <Stack.Screen options={{ headerShown: false }} name="Annotation" component={AnnotationScreen} />
         <Stack.Screen options={{ headerShown: false }} name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Timetable" component={TimetableScreen} />
-        <Stack.Screen options={{ headerShown: false }} name="HomePage" component={HomePage}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

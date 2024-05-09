@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import { SIZES, icons } from '../constants';
+import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const HomeScreen = () => {
+    const navigation = useNavigation();
     return (
         <View style={styles.container}>
             {/* Header Section */}
@@ -86,7 +88,8 @@ const HomeScreen = () => {
                 {/* Floating Action Button */}
                 <TouchableOpacity style={[styles.tabItem, styles.floatingButton]}>
                     {/* Use icons.NAME for Floating Action Button Icon */}
-                    <TouchableOpacity style={styles.annotationButton}>
+                    <TouchableOpacity style={styles.annotationButton}
+                        onPress={() => navigation.navigate('Annotation', {})}>
 
                     </TouchableOpacity>
                 </TouchableOpacity>

@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SIZES, icons } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
@@ -413,7 +414,10 @@ const EndAnnotation = ({onSaveResponse}) => {
                 <Text style={styles.questionText}>Well done, username💪🏼</Text>
                 <Text style={styles.questionText}>You have earned a badge!</Text>
             </View>
-
+            <View style={[styles.invalidButton, styles.selectedOption ]}>
+                <Button title="Next" onPress={handleSaveResponse} color="#FFFFFF" style={{width : "100%"}}/>
+                {/* <Button title="Next" onPress={handleSaveResponse} disabled={!selectedOption} color="#FFFFFF" /> */}
+            </View>
         </View>
     );
 };
@@ -434,7 +438,7 @@ const AnnotationScreen = () => {
         return () => {
           if (currentIndex === 20) {
             // saveResponsesToFirestore(responses);
-            navigation.navigate('Home'); // Navigate back to HomeScreen after completing questions
+            navigation.navigate('HomePage'); // Navigate back to HomeScreen after completing questions
           }
         };
       }, [currentIndex, 3, responses, navigation]);
@@ -444,29 +448,29 @@ const AnnotationScreen = () => {
         updatedResponses[`question${currentIndex + 1}`] = response;
         setResponses(updatedResponses);
     
-        if (currentIndex < 10) {
+        if (currentIndex < 6) {
           setCurrentIndex(currentIndex + 1);
         } else {
         //   saveResponsesToFirestore(updatedResponses);
-        //   navigation.navigate('Home'); // Navigate back to HomeScreen after completing questions
+          navigation.navigate('HomePage'); // Navigate back to HomeScreen after completing questions
         }
       };
     
-      const saveResponsesToFirestore = (responses) => {
-        firestore.collection('userResponses')
-          .add({
-            responses: responses,
-            userID: user.uid,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            responseZero: responses['question1'],
-          })
-          .then((docRef) => {
-            console.log('Responses saved with ID: ', docRef.id);
-          })
-          .catch((error) => {
-            console.error('Error saving responses:', error);
-          });
-      };
+    //   const saveResponsesToFirestore = (responses) => {
+    //     firestore.collection('userResponses')
+    //       .add({
+    //         responses: responses,
+    //         userID: user.uid,
+    //         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    //         responseZero: responses['question1'],
+    //       })
+    //       .then((docRef) => {
+    //         console.log('Responses saved with ID: ', docRef.id);
+    //       })
+    //       .catch((error) => {
+    //         console.error('Error saving responses:', error);
+    //       });
+    //   };
 
       let componentToRender;
 
@@ -483,7 +487,7 @@ const AnnotationScreen = () => {
       } else if (currentIndex === 5){
         componentToRender = <AnnotationConfidence onSaveResponse={handleSaveResponse}/>;
       } else {
-        componentToRender = <EndAnnotation onSaveResponse={saveResponsesToFirestore}/>;
+        componentToRender = <EndAnnotation onSaveResponse={handleSaveResponse}/>;
       }
   
       return (

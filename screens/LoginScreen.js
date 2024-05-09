@@ -57,7 +57,7 @@ const LoginScreen = () => {
     //   .catch(error => {
     //     alert(error)
     // })
-    navigation.navigate('Onboarding', {})
+    navigation.navigate('HomePage', {})
   }
 
   return (
