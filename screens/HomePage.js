@@ -27,7 +27,7 @@ const HomeScreen = () => {
                 {/* Search Bar with Icons */}
                 <View style={styles.searchBarContainer}>
                     <Image source={icons.search2} style={styles.notificationBells} />
-                    <TextInput style={styles.searchBar} placeholder="Search..." placeholderTextColor='white'/>
+                    <TextInput style={styles.searchBar} placeholder="'Search for EmoSnap'" placeholderTextColor='white'/>
                     {/* Search Icon */}
                 </View>
             </View>
@@ -40,22 +40,48 @@ const HomeScreen = () => {
                     {/* Widget 2 */}
                 </View>
                 {/* Emosnap Section */}
+                <Text style={styles.sectionHeading}>Upcoming EmoSnap</Text>
                 <TouchableOpacity style={styles.sectionButton}>
-                    <Text style={styles.sectionHeading}>Emosnap</Text>
+                    <Text style={styles.buttonText}>Emosnap</Text>
                 </TouchableOpacity>
                 {/* Reflection Journal Section */}
+                <Text style={styles.sectionHeading}>Refelction Journal</Text>
                 <TouchableOpacity style={styles.sectionButton}>
-                    <Text style={styles.sectionHeading}>Reflection Journal</Text>
+                    <Text style={styles.buttonText}>Reflection Journal</Text>
                 </TouchableOpacity>
             </View>
 
             {/* Tab Bar */}
             <View style={styles.tabBar}>
                 {/* Section 1 Icon */}
+                <TouchableOpacity style={styles.tabItem}>
+                    {/* Use icons.NAME for Section 1 Icon */}
+                    <Image source={icons.calendar} style={styles.calendarIcon} />
+                </TouchableOpacity>
+                
                 {/* Section 2 Icon */}
+                <TouchableOpacity style={styles.tabItem}>
+                    {/* Use icons.NAME for Section 2 Icon */}
+                    <Image source={icons.calendar} style={styles.calendarIcon} />
+                </TouchableOpacity>
+                
                 {/* Floating Action Button */}
+                <TouchableOpacity style={[styles.tabItem, styles.actionButton]}>
+                    {/* Use icons.NAME for Floating Action Button Icon */}
+                    <Image source={icons.calendar} style={styles.calendarIcon} />
+                </TouchableOpacity>
+                
                 {/* Section 3 Icon */}
+                <TouchableOpacity style={styles.tabItem}>
+                    {/* Use icons.NAME for Section 3 Icon */}
+                    <Image source={icons.calendar} style={styles.calendarIcon} />
+                </TouchableOpacity>
+                
                 {/* Section 4 Icon */}
+                <TouchableOpacity style={styles.tabItem}>
+                    {/* Use icons.NAME for Section 4 Icon */}
+                    <Image source={icons.calendar} style={styles.calendarIcon} />
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -130,6 +156,7 @@ const styles = StyleSheet.create({
     searchBar: {
         flex:1,
         marginLeft: 10,
+        width:'80%',
         color: '#ffffff',
     },
     mainSection: {
@@ -141,6 +168,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 20,
     },
+    sectionHeading: {
+        fontSize: SIZES.xLarge,
+        marginRight: 10,
+        color: '#ffffff',
+        marginTop: 20,
+        marginBottom: 20,
+
+    },
     sectionButton: {
         width: '100%',
         height: 40,
@@ -150,7 +185,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 10,
     },
-    sectionHeading: {
+    buttonText: {
         fontSize: 18,
         color: '#ffffff', // White Text
     },
