@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import Slider from '@react-native-community/slider';
+import VerticalSlider from 'react-native-vertical-slider-smartlife';
 import PropTypes from 'prop-types';
 import { auth, firestore, firebase } from '../firebase/firebase'
 import { useNavigation } from '@react-navigation/native';
-import { SIZES } from '../constants';
+import { SIZES, icons } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const StressScale = ({onSaveResponse}) => {
     const handleSaveResponse = () => {
@@ -17,23 +18,65 @@ const StressScale = ({onSaveResponse}) => {
 
     const [response, setResponse] = useState(0);
 
+    const sliderHeight = 0.6 * screenHeight;
+
+    const options = [
+        { "id": 10, "text": "Worst distress, crisis line!" },
+        { "id": 9, "text": "At a critical point!" },
+        { "id": 8, "text": "High stress, struggling to manage tasks." },
+        { "id": 7, "text": "Moderate to high stress, feeling overwhelmed." },
+        { "id": 6, "text": "Noticeable stress, multiple manageable tasks." },
+        { "id": 5, "text": "Moderate stress, facing challenges but managing." },
+        { "id": 4, "text": "Slight stress, small deadline approaching" },
+        { "id": 3, "text": "Calm, slight tension or unease." },
+        { "id": 2, "text": "Minor stress, slightly nervous or excited." },
+        { "id": 1, "text": "Fully relaxed, like on vacation." },
+        { "id": 0, "text": "" },
+    ];
+    
+
     return (
         <View style={styles.container}>
             <View style={styles.topSection}>
                 <Text style={styles.questionText}>Name, on a scale of 1 to 10, how stressed are you feeling?</Text>
-                <Text style={styles.sliderValue}>{response}</Text>
-                <Slider
-                style={{ width: screenWidth - 60, marginTop: 10 }}
-                minimumValue={0}
-                maximumValue={10}
-                step={1}
-                value={response}
-                onValueChange={(value) => setResponse(value)}
-                // minimumTrackTintColor={getTrackColor(response)} // Color for the left side of the thumb
-                // maximumTrackTintColor={getTrackColor(response)} // Color for the right side of the thumb
-                thumbTintColor="#957BEE"
-                />
+                {/* <Text style={styles.sliderValue}>{response}</Text> */}
+                <View style={styles.sliderContainer}>
+                    <VerticalSlider
+                        value={response}
+                        disabled={false}
+                        min={0}
+                        max={10}
+                        onChange={(value) => setResponse(value)}
+                        width={20}
+                        height={sliderHeight}
+                        step={1}
+                        borderRadius={10}
+                        minimumTrackTintColor={"#957BEE"}
+                        maximumTrackTintColor={"gray"}
+                    />
+                    <View style={styles.sliderOptionContainer}>
+                    {options.map((option) => (
+                        <View
+                            key={option.id}
+                            style={[
+                                styles.labelView,
+                            ]}
+                            onPress={() => handleOptionSelect(option)}
+                        >
+                            <Text style={[styles.optionText, 
+                                {fontSize: SIZES.large, marginRight:20}, 
+                                response === option.id? styles.selectedOptionText : null,
+                                response !== 0 ? response !== option.id ? {opacity:0.3} : null : null]}>{option.id}</Text>
+                            <Text style={[styles.optionText,
+                                response === option.id? styles.selectedOptionText : null,
+                                response !== 0 ? response !== option.id ? {opacity:0.3} : null : null]}>{option.text}</Text>
+                        </View>
+                    ))}
+                    </View>
+                </View>
             </View>
+
+            
 
             {/* <View style={styles.buttonContainer}>
                 <Button title="Next" onPress={handleSaveResponse} color="#FFFFFF" />
@@ -275,24 +318,70 @@ const AnnotationConfidence = ({onSaveResponse}) => {
         setResponse(0);
     };
 
+    const options = [
+        { "id": 5, "text": "100%, not even a pinch of doubt!", "subText": "🤩" },
+        { "id": 4, "text": "Definitely Sure!", "subText": "😎" },
+        { "id": 3, "text": "Sure", "subText": "🙂" },
+        { "id": 2, "text": "Somewhat not sure", "subText": "😬" },
+        { "id": 1, "text": "Not sure", "subText": "😳" },
+        { "id": 0, "text": "", "subText": "" },
+    ]
+
     const [response, setResponse] = useState(0);
+
+    const sliderHeight = 0.6 * screenHeight;
 
     return (
         <View style={styles.container}>
             <View style={styles.topSection}>
                 <Text style={styles.questionText}>username, how confident are you about the annotation you made?</Text>
-                <Text style={styles.sliderValue}>{response}</Text>
-                <Slider
-                style={{ width: screenWidth - 60, marginTop: 10 }}
-                minimumValue={0}
-                maximumValue={6}
-                step={1}
-                value={response}
-                onValueChange={(value) => setResponse(value)}
-                // minimumTrackTintColor={getTrackColor(response)} // Color for the left side of the thumb
-                // maximumTrackTintColor={getTrackColor(response)} // Color for the right side of the thumb
-                thumbTintColor="#957BEE"
-                />
+                {/* <Text style={styles.sliderValue}>{response}</Text> */}
+                <View style={styles.sliderContainer}>
+                    <View style={[styles.sliderOptionContainer2, {width:'25%'}]}>
+                    {options.map((option) => (
+                        <View
+                            key={option.id}
+                            style={[
+                                styles.labelView,
+                            ]}
+                            onPress={() => handleOptionSelect(option)}
+                        >
+                            <Text style={[styles.optionText, 
+                                {fontSize: SIZES.large, marginRight:20}, 
+                                response === option.id? styles.selectedOptionText : null,
+                                response !== 0 ? response !== option.id ? {opacity:0.3} : null : null]}>{option.subText}</Text>
+                        </View>
+                    ))}
+                    </View>
+                    <VerticalSlider
+                        value={response}
+                        disabled={false}
+                        min={0}
+                        max={5}
+                        onChange={(value) => setResponse(value)}
+                        width={20}
+                        height={sliderHeight}
+                        step={1}
+                        borderRadius={10}
+                        minimumTrackTintColor={"#957BEE"}
+                        maximumTrackTintColor={"#2A272A"}
+                    />
+                    <View style={[styles.sliderOptionContainer2, {width:"75%"}]}>
+                    {options.map((option) => (
+                        <View
+                            key={option.id}
+                            style={[
+                                styles.labelView,
+                            ]}
+                            onPress={() => handleOptionSelect(option)}
+                        >
+                            <Text style={[styles.optionText,
+                                response === option.id? styles.selectedOptionText : null,
+                                response !== 0 ? response !== option.id ? {opacity:0.3} : null : null]}>{option.text}</Text>
+                        </View>
+                    ))}
+                    </View>
+                </View>
             </View>
 
             {/* <View style={styles.buttonContainer}>
@@ -428,6 +517,7 @@ const styles = StyleSheet.create({
     },
     topSection: {
         flex: 1,
+        flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'center',
         marginTop: 20,
@@ -513,5 +603,45 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         marginTop: 20,
+    },
+      label: {
+        fontSize: 12,
+        color: '#333',
+        textAlign: 'center',
+        position: 'absolute', // Required for absolute positioning
+      },
+      sliderContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      labels: {
+        marginLeft: 10,
+      },
+      labelContainer: {
+        marginBottom: 3,
+      },
+    sliderOptionContainer: {
+        flexDirection: 'column',
+        width: "80%",
+        marginBottom: 20,
+        marginTop: 20,
+        padding: 10,
+        justifyContent:"space-around"
+    },
+    sliderOptionContainer2: {
+        flexDirection: 'column',
+        width: "80%",
+        height: "100%",
+        marginBottom: 20,
+        marginTop: 20,
+        padding: 10,
+        justifyContent:"space-around",
+    },
+    labelView: {
+        padding: 10,
+        borderColor: 'rgba(255, 255, 255, 0.5)',
+        flexDirection: 'row',
+        alignItems: 'left',
+        width: "100%",
     },
 });

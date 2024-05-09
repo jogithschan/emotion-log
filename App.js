@@ -33,7 +33,7 @@ export default function App() {
         <Stack.Screen name="Registration" component={RegistrationScreen} />  
         <Stack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
         <Stack.Screen options={{ headerShown: false }} name="Annotation" component={AnnotationScreen} />
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen options={{ headerShown: false }} name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Timetable" component={TimetableScreen} />
         <Stack.Screen options={{ headerShown: false }} name="HomePage" component={HomePage}/>
       </Stack.Navigator>

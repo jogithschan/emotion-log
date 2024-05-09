@@ -13,6 +13,7 @@ import notificationBell from '../assets/icons/notification-bell.png'
 import search2 from '../assets/icons/search2.png'
 import arrow from '../assets/icons/arrow.png'
 import lock from '../assets/icons/lock.png'
+import scrollIndicator from '../assets/icons/scrollIndicator.png'
 export default {
   heart,
   menu,
@@ -29,4 +30,5 @@ export default {
   search2,
   arrow,
   lock,
+  scrollIndicator,
 };
