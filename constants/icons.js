@@ -11,6 +11,8 @@ import chevronRight from '../assets/icons/chevron-right.png'
 import calendar from '../assets/icons/calendar_icon.png'
 import notificationBell from '../assets/icons/notification-bell.png'
 import search2 from '../assets/icons/search2.png'
+import arrow from '../assets/icons/arrow.png'
+import lock from '../assets/icons/lock.png'
 export default {
   heart,
   menu,
@@ -24,5 +26,7 @@ export default {
   chevronRight,
   calendar,
   notificationBell,
-  search2
+  search2,
+  arrow,
+  lock,
 };

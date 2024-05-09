@@ -37,18 +37,36 @@ const HomeScreen = () => {
                 {/* Widgets Displaying Information */}
                 <View style={styles.widgetContainer}>
                     {/* Widget 1 */}
+                    <TouchableOpacity style={styles.homeWidget}>
+                        <Text style={styles.buttonText}>Widget 1</Text>
+                    </TouchableOpacity>
                     {/* Widget 2 */}
+                    <TouchableOpacity style={styles.homeWidget}>
+                        <Text style={styles.buttonText}>Widget 2</Text>
+                    </TouchableOpacity>
                 </View>
                 {/* Emosnap Section */}
                 <Text style={styles.sectionHeading}>Upcoming EmoSnap</Text>
-                <TouchableOpacity style={styles.sectionButton}>
-                    <Text style={styles.buttonText}>Emosnap</Text>
-                </TouchableOpacity>
+                <View style={styles.section}>
+                    <View style={styles.buttonTextSection}>
+                        <Text style={styles.buttonText}>Emosnap 2</Text>
+                        <Text style={styles.buttonSubText}>12 noon</Text>
+                    </View>
+                    <TouchableOpacity style={styles.sectionButton}>
+                        <Image source={icons.arrow} style={styles.buttonIcon} />
+                    </TouchableOpacity>
+                </View>
                 {/* Reflection Journal Section */}
-                <Text style={styles.sectionHeading}>Refelction Journal</Text>
-                <TouchableOpacity style={styles.sectionButton}>
-                    <Text style={styles.buttonText}>Reflection Journal</Text>
-                </TouchableOpacity>
+                <Text style={styles.sectionHeading}>Reflection Journal</Text>
+                <View style={styles.section}>
+                <View style={styles.buttonTextSection}>
+                        <Text style={styles.buttonText}>Daily Reflection</Text>
+                        <Text style={styles.buttonSubText}>Unlocks at 9pm</Text>
+                    </View>
+                    <TouchableOpacity style={[styles.sectionButton, styles.disabledSectionButton]} disabled={true}>
+                        <Image source={icons.lock} style={styles.buttonIcon} />
+                    </TouchableOpacity>
+                </View>
             </View>
 
             {/* Tab Bar */}
@@ -56,31 +74,33 @@ const HomeScreen = () => {
                 {/* Section 1 Icon */}
                 <TouchableOpacity style={styles.tabItem}>
                     {/* Use icons.NAME for Section 1 Icon */}
-                    <Image source={icons.calendar} style={styles.calendarIcon} />
+                    <Image source={icons.calendar} style={styles.tabIcon} />
                 </TouchableOpacity>
                 
                 {/* Section 2 Icon */}
                 <TouchableOpacity style={styles.tabItem}>
                     {/* Use icons.NAME for Section 2 Icon */}
-                    <Image source={icons.calendar} style={styles.calendarIcon} />
+                    <Image source={icons.calendar} style={styles.tabIcon} />
                 </TouchableOpacity>
                 
                 {/* Floating Action Button */}
-                <TouchableOpacity style={[styles.tabItem, styles.actionButton]}>
+                <TouchableOpacity style={[styles.tabItem, styles.floatingButton]}>
                     {/* Use icons.NAME for Floating Action Button Icon */}
-                    <Image source={icons.calendar} style={styles.calendarIcon} />
+                    <TouchableOpacity style={styles.annotationButton}>
+
+                    </TouchableOpacity>
                 </TouchableOpacity>
                 
                 {/* Section 3 Icon */}
                 <TouchableOpacity style={styles.tabItem}>
                     {/* Use icons.NAME for Section 3 Icon */}
-                    <Image source={icons.calendar} style={styles.calendarIcon} />
+                    <Image source={icons.calendar} style={styles.tabIcon} />
                 </TouchableOpacity>
                 
                 {/* Section 4 Icon */}
                 <TouchableOpacity style={styles.tabItem}>
                     {/* Use icons.NAME for Section 4 Icon */}
-                    <Image source={icons.calendar} style={styles.calendarIcon} />
+                    <Image source={icons.calendar} style={styles.tabIcon} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -106,7 +126,8 @@ const styles = StyleSheet.create({
     dateContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingBottom: 30
+        paddingTop: 5,
+        paddingBottom: 20
     },
     dateText: {
         fontSize: 16,
@@ -161,7 +182,7 @@ const styles = StyleSheet.create({
     },
     mainSection: {
         flex: 1,
-        padding: 20,
+        padding: 15,
     },
     widgetContainer: {
         flexDirection: 'row',
@@ -172,21 +193,31 @@ const styles = StyleSheet.create({
         fontSize: SIZES.xLarge,
         marginRight: 10,
         color: '#ffffff',
-        marginTop: 20,
-        marginBottom: 20,
-
+        marginTop: 10,
+        marginBottom:10,
     },
-    sectionButton: {
+    section: {
+        flex:0,
+        flexDirection:'row',
         width: '100%',
-        height: 40,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#444444', // Darker Background
+        backgroundColor: '#252527', // Darker Background
         borderRadius: 10,
         marginBottom: 10,
     },
+    buttonTextSection: {
+        flex:0,
+        flexDirection:'column',
+        margin:10,
+    },
     buttonText: {
         fontSize: 18,
+        color: '#ffffff', // White Text
+        marginBottom: 5,
+    },
+    buttonSubText: {
+        fontSize: 14,
         color: '#ffffff', // White Text
     },
     tabBar: {
@@ -194,8 +225,40 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 20,
-        paddingBottom: 20,
+        paddingBottom: 40,
     },
+    tabIcon: {
+        width:20,
+        height:20,
+    },
+    annotationButton: {
+        width:70,
+        height:70,
+        borderRadius:35,
+        marginBottom: 10,
+        backgroundColor: "#987BEE",
+    },
+    homeWidget: {
+        width: 174,
+        height: 150,
+        borderRadius: 10,
+        alignItems:'center',
+        justifyContent: 'center',
+        backgroundColor: "#252527",
+
+    },
+    sectionButton: {
+        width:53,
+        height: 53,
+        alignItems:'center',
+        justifyContent:'center',
+        backgroundColor: "#957BEE",
+        borderRadius:10,
+        margin:5,
+    },
+    disabledSectionButton: {
+        opacity:0.5,
+    }
 });
 
 export default HomeScreen;
