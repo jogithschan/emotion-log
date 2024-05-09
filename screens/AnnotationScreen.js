@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { auth, firestore, firebase } from '../firebase/firebase'
 import { useNavigation } from '@react-navigation/native';
 import { SIZES } from '../constants';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -18,21 +19,21 @@ const StressScale = ({onSaveResponse}) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.questionText}>Name, on a scale of 1 to 10, how stressed are you feeling?</Text>
-
-            <Text style={styles.sliderValue}>{response}</Text>
-
-            <Slider
-            style={{ width: screenWidth - 60, marginTop: 10 }}
-            minimumValue={0}
-            maximumValue={10}
-            step={1}
-            value={response}
-            onValueChange={(value) => setResponse(value)}
-            // minimumTrackTintColor={getTrackColor(response)} // Color for the left side of the thumb
-            // maximumTrackTintColor={getTrackColor(response)} // Color for the right side of the thumb
-            thumbTintColor="#957BEE"
-            />
+            <View style={styles.topSection}>
+                <Text style={styles.questionText}>Name, on a scale of 1 to 10, how stressed are you feeling?</Text>
+                <Text style={styles.sliderValue}>{response}</Text>
+                <Slider
+                style={{ width: screenWidth - 60, marginTop: 10 }}
+                minimumValue={0}
+                maximumValue={10}
+                step={1}
+                value={response}
+                onValueChange={(value) => setResponse(value)}
+                // minimumTrackTintColor={getTrackColor(response)} // Color for the left side of the thumb
+                // maximumTrackTintColor={getTrackColor(response)} // Color for the right side of the thumb
+                thumbTintColor="#957BEE"
+                />
+            </View>
 
             {/* <View style={styles.buttonContainer}>
                 <Button title="Next" onPress={handleSaveResponse} color="#FFFFFF" />
@@ -69,26 +70,27 @@ const ValenceArousal = ({ onSaveResponse }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.questionText}>Select the option that best describes how you're feeling now.</Text>
-
-            <View style={styles.optionContainer}>
-                {options.map((option) => (
-                    <TouchableOpacity
-                        key={option.id}
-                        style={[
-                            styles.optionButton,
-                            selectedOption ? selectedOption.id === option.id ? styles.selectedOption : null : null
-                        ]}
-                        onPress={() => handleOptionSelect(option)}
-                    >
-                        <Text style={[
-                            styles.optionText,
-                            selectedOption ? selectedOption.id === option.id ? styles.selectedOptionText : null : null]}>{option.text}</Text>
-                        <Text style={[
-                            styles.subText,
-                            selectedOption ? selectedOption.id === option.id ? styles.selectedOptionText : null : null]}>{option.subtext}</Text>
-                    </TouchableOpacity>
-                ))}
+            <View style={styles.topSection}>
+                <Text style={styles.questionText}>Select the option that best describes how you're feeling now.</Text>
+                <View style={styles.optionContainer}>
+                    {options.map((option) => (
+                        <TouchableOpacity
+                            key={option.id}
+                            style={[
+                                styles.optionButton,
+                                selectedOption ? selectedOption.id === option.id ? styles.selectedOption : null : null
+                            ]}
+                            onPress={() => handleOptionSelect(option)}
+                        >
+                            <Text style={[
+                                styles.optionText,
+                                selectedOption ? selectedOption.id === option.id ? styles.selectedOptionText : null : null]}>{option.text}</Text>
+                            <Text style={[
+                                styles.subText,
+                                selectedOption ? selectedOption.id === option.id ? styles.selectedOptionText : null : null]}>{option.subtext}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
             </View>
 
             {/* <Text style={{color:"#FFFFFF"}}>{selectedOption ? selectedOption.id : null}</Text> */}
@@ -140,23 +142,24 @@ const FeelingSelect = ({ onSaveResponse }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.questionText}>What emotions are you feeling?</Text>
-
-            <View style={styles.optionContainer}>
-                {options.map((option) => (
-                    <TouchableOpacity
-                        key={option.id}
-                        style={[
-                            styles.optionButton,
-                            selectedOptions.includes(option.id) ? styles.selectedOption : null,
-                        ]}
-                        onPress={() => handleOptionSelect(option)}
-                    >
-                        <Text style={[
-                            styles.optionText,
-                            selectedOptions.includes(option.id) ? styles.selectedOptionText : null]}>{option.text}</Text>
-                    </TouchableOpacity>
-                ))}
+            <View style={styles.topSection}>
+                <Text style={styles.questionText}>What emotions are you feeling?</Text>
+                <View style={styles.optionContainer}>
+                    {options.map((option) => (
+                        <TouchableOpacity
+                            key={option.id}
+                            style={[
+                                styles.optionButton,
+                                selectedOptions.includes(option.id) ? styles.selectedOption : null,
+                            ]}
+                            onPress={() => handleOptionSelect(option)}
+                        >
+                            <Text style={[
+                                styles.optionText,
+                                selectedOptions.includes(option.id) ? styles.selectedOptionText : null]}>{option.text}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
             </View>
 
             {/* <Text style={{color:"#FFFFFF"}}>{selectedOption ? selectedOption.id : null}</Text> */}
@@ -179,25 +182,26 @@ const Journal = ({onSaveResponse}) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.questionText}>Want to explain more about your annotation? Journal about it here.</Text>
-
-            <Text style={styles.sliderValue}>{response}</Text>
-
-            <TouchableOpacity style={styles.textBox}>
+            <View style={styles.topSection}>
+                <Text style={styles.questionText}>Want to explain more about your annotation? Journal about it here.</Text>
+                <Text style={styles.sliderValue}>{response}</Text>
+                <TouchableOpacity style={styles.textBox}>
                 
-            </TouchableOpacity>
+                </TouchableOpacity>
+            </View>
             {/* <View style={styles.buttonContainer}>
                 <Button title="Next" onPress={handleSaveResponse} color="#FFFFFF" />
             </View> */}
 
-            <View style={styles.invalidButton}>
-                <Button title="Skip" onPress={handleSaveResponse} color="#FFFFFF" style={{width : "100%"}}/>
-                {/* <Button title="Next" onPress={handleSaveResponse} disabled={!selectedOption} color="#FFFFFF" /> */}
-            </View>
-
-            <View style={[styles.invalidButton, response !== 0 ? styles.selectedOption : null]}>
-                <Button title="Next" onPress={handleSaveResponse} disabled={!response} color="#FFFFFF" style={{width : "100%"}}/>
-                {/* <Button title="Next" onPress={handleSaveResponse} disabled={!selectedOption} color="#FFFFFF" /> */}
+            <View style={styles.buttonSection}>
+                <View style={styles.invalidButton}>
+                    <Button title="Skip" onPress={handleSaveResponse} color="#FFFFFF" style={{width : "100%"}}/>
+                    {/* <Button title="Next" onPress={handleSaveResponse} disabled={!selectedOption} color="#FFFFFF" /> */}
+                </View>
+                <View style={[styles.invalidButton, response !== 0 ? styles.selectedOption : null]}>
+                    <Button title="Next" onPress={handleSaveResponse} disabled={!response} color="#FFFFFF" style={{width : "100%"}}/>
+                    {/* <Button title="Next" onPress={handleSaveResponse} disabled={!selectedOption} color="#FFFFFF" /> */}
+                </View>
             </View>
 
         </View>
@@ -214,6 +218,7 @@ const ActivitySelect = ({ onSaveResponse }) => {
     ];
 
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const [moveAhead, setMoveAhead] = useState(false);
 
     const handleOptionSelect = (option) => {
         // Check if the option is already selected
@@ -224,6 +229,7 @@ const ActivitySelect = ({ onSaveResponse }) => {
             // If not selected, add it to the selectedOptions array
             setSelectedOptions([...selectedOptions, option.id]);
         }
+        setMoveAhead(selectedOptions.length > 0);
     };
 
     const handleSaveResponse = () => {
@@ -233,29 +239,30 @@ const ActivitySelect = ({ onSaveResponse }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.questionText}>Stay connected, username! You're doing great🌟. Select the activities you've engaged in since your last annotation.</Text>
-
-            <View style={styles.optionContainer}>
-                {options.map((option) => (
-                    <TouchableOpacity
-                        key={option.id}
-                        style={[
-                            styles.optionButton,
-                            selectedOptions.includes(option.id) ? styles.selectedOption : null,
-                        ]}
-                        onPress={() => handleOptionSelect(option)}
-                    >
-                        <Text style={[
-                            styles.optionText,
-                            selectedOptions.includes(option.id) ? styles.selectedOptionText : null]}>{option.text}</Text>
-                    </TouchableOpacity>
-                ))}
+            <View style={styles.topSection}>
+                <Text style={styles.questionText}>Stay connected, username! You're doing great🌟. Select the activities you've engaged in since your last annotation.</Text>
+                <View style={styles.optionContainer}>
+                    {options.map((option) => (
+                        <TouchableOpacity
+                            key={option.id}
+                            style={[
+                                styles.optionButton,
+                                selectedOptions.includes(option.id) ? styles.selectedOption : null,
+                            ]}
+                            onPress={() => handleOptionSelect(option)}
+                        >
+                            <Text style={[
+                                styles.optionText,
+                                selectedOptions.includes(option.id) ? styles.selectedOptionText : null]}>{option.text}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
             </View>
 
             {/* <Text style={{color:"#FFFFFF"}}>{selectedOption ? selectedOption.id : null}</Text> */}
 
-            <View style={[styles.invalidButton, selectedOptions.length !== 0 ? styles.selectedOption : null]}>
-                <Button title="Next" onPress={handleSaveResponse} disabled={!selectedOptions} color="#FFFFFF" style={{width : "100%"}}/>
+            <View style={[styles.invalidButton, moveAhead ? styles.selectedOption : null]}>
+                <Button title="Next" onPress={handleSaveResponse} disabled={!moveAhead} color="#FFFFFF" style={{width : "100%"}}/>
                 {/* <Button title="Next" onPress={handleSaveResponse} disabled={!selectedOption} color="#FFFFFF" /> */}
             </View>
         </View>
@@ -272,29 +279,31 @@ const AnnotationConfidence = ({onSaveResponse}) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.questionText}>username, how confident are you about the annotation you made?</Text>
-
-            <Text style={styles.sliderValue}>{response}</Text>
-
-            <Slider
-            style={{ width: screenWidth - 60, marginTop: 10 }}
-            minimumValue={0}
-            maximumValue={6}
-            step={1}
-            value={response}
-            onValueChange={(value) => setResponse(value)}
-            // minimumTrackTintColor={getTrackColor(response)} // Color for the left side of the thumb
-            // maximumTrackTintColor={getTrackColor(response)} // Color for the right side of the thumb
-            thumbTintColor="#957BEE"
-            />
+            <View style={styles.topSection}>
+                <Text style={styles.questionText}>username, how confident are you about the annotation you made?</Text>
+                <Text style={styles.sliderValue}>{response}</Text>
+                <Slider
+                style={{ width: screenWidth - 60, marginTop: 10 }}
+                minimumValue={0}
+                maximumValue={6}
+                step={1}
+                value={response}
+                onValueChange={(value) => setResponse(value)}
+                // minimumTrackTintColor={getTrackColor(response)} // Color for the left side of the thumb
+                // maximumTrackTintColor={getTrackColor(response)} // Color for the right side of the thumb
+                thumbTintColor="#957BEE"
+                />
+            </View>
 
             {/* <View style={styles.buttonContainer}>
                 <Button title="Next" onPress={handleSaveResponse} color="#FFFFFF" />
             </View> */}
 
-            <View style={[styles.invalidButton, response !== 0 ? styles.selectedOption : null]}>
-                <Button title="Next" onPress={handleSaveResponse} disabled={!response} color="#FFFFFF" style={{width : "100%"}}/>
-                {/* <Button title="Next" onPress={handleSaveResponse} disabled={!selectedOption} color="#FFFFFF" /> */}
+            <View style={styles.buttonSection}>
+                <View style={[styles.invalidButton, response !== 0 ? styles.selectedOption : null]}>
+                    <Button title="Next" onPress={handleSaveResponse} disabled={!response} color="#FFFFFF" style={{width : "100%"}}/>
+                    {/* <Button title="Next" onPress={handleSaveResponse} disabled={!selectedOption} color="#FFFFFF" /> */}
+                </View>
             </View>
 
         </View>
@@ -311,8 +320,10 @@ const EndAnnotation = ({onSaveResponse}) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.questionText}>Well done, username💪🏼</Text>
-            <Text style={styles.questionText}>You have earned a badge!</Text>
+            <View style={{justifyContent:"center"}}>
+                <Text style={styles.questionText}>Well done, username💪🏼</Text>
+                <Text style={styles.questionText}>You have earned a badge!</Text>
+            </View>
 
         </View>
     );
@@ -387,9 +398,9 @@ const AnnotationScreen = () => {
       }
   
       return (
-          <View style={{ flex: 1, backgroundColor: "#000000" }}>
+          <SafeAreaView style={{ flex: 1, backgroundColor: "#000000" }}>
               {componentToRender}
-          </View>
+          </SafeAreaView>
       );
     
 };
@@ -398,9 +409,8 @@ export default AnnotationScreen;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 0,
-        alignItems: 'left',
-        justifyContent: 'center',
+        flex: 1,
+        justifyContent:'space-between',
         alignItems: 'center',
         margin: 10,
         borderRadius: 40,
@@ -409,9 +419,24 @@ const styles = StyleSheet.create({
         backgroundColor:"#000000",
         shadowColor: "#000000",
     },
+    buttonSection: {
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        width:"100%",
+        marginBottom: 30, // Adjust as needed for spacing between buttons and bottom
+    },
+    topSection: {
+        flex: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginTop: 20,
+        width:"100%"
+    },
     questionText: {
         fontSize: SIZES.xLarge,
-        color: "#FFFFFF"
+        color: "#FFFFFF",
+        width:"100%"
         // marginBottom: 5,
       },
     sliderValue: {

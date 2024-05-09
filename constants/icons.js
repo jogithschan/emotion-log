@@ -8,7 +8,9 @@ import share from "../assets/icons/share.png";
 import location from "../assets/icons/location.png";
 import chevronLeft from '../assets/icons/chevron-left.png'
 import chevronRight from '../assets/icons/chevron-right.png'
-
+import calendar from '../assets/icons/calendar_icon.png'
+import notificationBell from '../assets/icons/notification-bell.png'
+import search2 from '../assets/icons/search2.png'
 export default {
   heart,
   menu,
@@ -19,5 +21,8 @@ export default {
   share,
   location,
   chevronLeft,
-  chevronRight
+  chevronRight,
+  calendar,
+  notificationBell,
+  search2
 };
