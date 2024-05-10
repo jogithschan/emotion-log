@@ -1,7 +1,7 @@
-// Import the functions you need from the SDKs you need
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/firestore"
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { getAuth } from "firebase/auth";
+import Constants from 'expo-constants';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,14 +16,6 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-let app;
-if (firebase.apps.length === 0) {
-  app = firebase.initializeApp(firebaseConfig);
-} else {
-  app = firebase.app()
-}
+const app = initializeApp(firebaseConfig);
 
-const auth = firebase.auth()
-const firestore = firebase.firestore()
-
-export { auth, firestore, firebase };
+export { app };

@@ -1,64 +1,37 @@
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { auth, firestore } from '../firebase/firebase'
+import { app } from '../firebase/firebase'
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        navigation.replace("Home")
-      }
-    })
-
-    return unsubscribe
-  }, [])
-
-//   const handleSignUp = () => {
-//     auth
-//       .createUserWithEmailAndPassword(email, password)
-//       .then(userCredentials => {
-//         const user = userCredentials.user;
-//         console.log('Registered with:', user.email);
-//       })
-//       .catch(error => alert(error.message))
-//   }
+  const auth = getAuth(app);
 
   const handleSignUp = () =>{
     navigation.navigate("Registration")
   }
 
   const handleLogin = () => {
-    // auth
-    //   .signInWithEmailAndPassword(email, password)
-    //   .then((response) => {
-    //     const uid = response.user.uid
-    //     const usersRef = firestore.collection('users')
-    //     usersRef
-    //         .doc(uid)
-    //         .get()
-    //         .then(firestoreDocument => {
-    //             if (!firestoreDocument.exists) {
-    //                 alert("User does not exist anymore.")
-    //                 return;
-    //             }
-    //             const user = firestoreDocument.data()
-    //             navigation.navigate('Home', {user})
-    //         })
-    //         .catch(error => {
-    //             alert(error)
-    //         });
-    //   })
-    //   .catch(error => {
-    //     alert(error)
-    // })
-    navigation.navigate('HomePage', {})
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const uid = userCredential.user.uid;
+      navigation.navigate('HomePage')
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+    });
   }
+
+  // const handleLogin = () => {
+  //   navigation.navigate('HomePage')
+  // }
 
   return (
     <KeyboardAvoidingView

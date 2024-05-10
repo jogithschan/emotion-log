@@ -1,59 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, Dimensions } from 'react-native';
-import { firebase, auth, firestore } from '../firebase/firebase'
+import { app } from '../firebase/firebase'
+import {getAuth} from 'firebase/auth'
+import { getFirestore, collection, getDoc, doc } from "firebase/firestore";
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONT, SHADOWS, SIZES, images, icons } from "../constants"
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const screenWidth = Dimensions.get('window').width;
 
-const HomeScreen = () => {
+const HomeScreen = async () => {
   const navigation = useNavigation();
+
+  const auth = getAuth(app);
+  const db = getFirestore(app);
   
   const [entityText, setEntityText] = useState('')
   const [entities, setEntities] = useState([])
-  const [userFullName, setUserFullName] = useState([])
-
-  const entityRef = firestore.collection('userResponses')
-  const userRef = firestore.collection('users')
+  const [userFullName, setUserFullName] = useState('')
 
   const userID = auth.currentUser?.uid
 
-  useEffect(() => {
-    userRef
-          .where("id", "==", userID)
-          .onSnapshot(
-            querySnapshot =>{
-              querySnapshot.forEach(doc => {
-                const data = doc.data()
-                setUserFullName(data.fullName)
-              });
-            },
-            error => {
-              console.log(error)
-            }
-          )
-  }, [])
+  const entityRef = collection(db, 'userResponses')
+  const userRef = doc(db, 'users', userID)
 
-    useEffect(() => {
-      entityRef
-          .where("userID", "==", userID)
-          .orderBy('timestamp', 'desc')
-          .onSnapshot(
-              querySnapshot => {
-                  const newEntities = []
-                  querySnapshot.forEach(doc => {
-                      const entity = doc.data()
-                      entity.id = doc.id
-                      newEntities.push(entity)
-                  });
-                  setEntities(newEntities)
-              },
-              error => {
-                  console.log(error)
-              }
-          )
-  }, [])
+  const docSnap = await getDoc(userRef);
+  
+  if (docSnap.exists()) {
+    const data = docSnap.data(); // Get the document data
+    if (data) { // Check if data exists (might be null or undefined)
+      setUserFullName(data.name); // Extract the name property
+    } else {
+      console.log("Document data is empty.");
+    }
+  } else {
+    console.log("No such document!");
+  }
+
+  // useEffect(() => {
+  //   userRef
+  //         .where("id", "==", userID)
+  //         .onSnapshot(
+  //           querySnapshot =>{
+  //             querySnapshot.forEach(doc => {
+  //               const data = doc.data()
+  //               setUserFullName(data.fullName)
+  //             });
+  //           },
+  //           error => {
+  //             console.log(error)
+  //           }
+  //         )
+  // }, [])
+
+  //   useEffect(() => {
+  //     entityRef
+  //         .where("userID", "==", userID)
+  //         .orderBy('timestamp', 'desc')
+  //         .onSnapshot(
+  //             querySnapshot => {
+  //                 const newEntities = []
+  //                 querySnapshot.forEach(doc => {
+  //                     const entity = doc.data()
+  //                     entity.id = doc.id
+  //                     newEntities.push(entity)
+  //                 });
+  //                 setEntities(newEntities)
+  //             },
+  //             error => {
+  //                 console.log(error)
+  //             }
+  //         )
+  // }, [])
 
   function formatDate(date) {
     const options = { day: 'numeric', month: 'short' };

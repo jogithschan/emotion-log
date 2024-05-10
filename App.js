@@ -17,17 +17,28 @@ import { auth, firestore } from './firebase/firebase'
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from "expo-constants"; // Optional
-
+import { app } from './firebase/firebase'
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const Stack = createNativeStackNavigator();
-
-const routeLogin = () =>{
-  navigation.replace("Login")
-}
 
 export default function App() {
 
   // presist login
+  // const auth = getAuth(app);
+  // onAuthStateChanged(auth, (user) => {
+  //   if (user) {
+  //     // User is signed in, see docs for a list of available properties
+  //     // https://firebase.google.com/docs/reference/js/auth.user
+  //     const uid = user.uid;
+  //     navigation.replace("HomePage", { uid });
+  //     // ...
+  //   } else {
+  //     // User is signed out
+  //     // ...
+  //     navigation.replace("Login");
+  //   }
+  // });
   
   return (
     <NavigationContainer>

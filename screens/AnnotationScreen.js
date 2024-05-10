@@ -6,12 +6,15 @@ import { auth, firestore, firebase } from '../firebase/firebase'
 import { useNavigation } from '@react-navigation/native';
 import { SIZES, icons } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, collection, getDoc, setDoc, doc, Timestamp, writeBatch } from "firebase/firestore";
+import { app } from '../firebase/firebase';
 
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-const StressScale = ({onSaveResponse}) => {
+const StressScale = ({onSaveResponse, fName}) => {
     const handleSaveResponse = () => {
         onSaveResponse(response);
         setResponse(0);
@@ -39,7 +42,7 @@ const StressScale = ({onSaveResponse}) => {
     return (
         <View style={styles.container}>
             <View style={styles.topSection}>
-                <Text style={styles.questionText}>Name, on a scale of 1 to 10, how stressed are you feeling?</Text>
+                <Text style={styles.questionText}>{fName}, on a scale of 1 to 10, how stressed are you feeling?</Text>
                 {/* <Text style={styles.sliderValue}>{response}</Text> */}
                 <View style={styles.sliderContainer}>
                     <VerticalSlider
@@ -91,6 +94,7 @@ const StressScale = ({onSaveResponse}) => {
         </View>
     );
 };
+
 
 const ValenceArousal = ({ onSaveResponse }) => {
     const options = [
@@ -156,6 +160,7 @@ const ValenceArousal = ({ onSaveResponse }) => {
     );
 };
 
+// check feelings for different options
 const FeelingSelect = ({ onSaveResponse }) => {
     const options = [
         { "id": 1, "text": "Nervous" },
@@ -252,7 +257,7 @@ const Journal = ({onSaveResponse}) => {
     );
 };
 
-const ActivitySelect = ({ onSaveResponse }) => {
+const ActivitySelect = ({ onSaveResponse, fName}) => {
     const options = [
         { "id": 1, "text": "I have performed some physical activity💪" },
         { "id": 2, "text": "I have moved from high temperature region to low temperature region🌡️" },
@@ -284,7 +289,7 @@ const ActivitySelect = ({ onSaveResponse }) => {
     return (
         <View style={styles.container}>
             <View style={styles.topSection}>
-                <Text style={styles.questionText}>Stay connected, username! You're doing great🌟. Select the activities you've engaged in since your last annotation.</Text>
+                <Text style={styles.questionText}>Stay connected, {fName}! You're doing great🌟. Select the activities you've engaged in since your last annotation.</Text>
                 <View style={styles.optionContainer}>
                     {options.map((option) => (
                         <TouchableOpacity
@@ -313,7 +318,7 @@ const ActivitySelect = ({ onSaveResponse }) => {
     );
 };
 
-const AnnotationConfidence = ({onSaveResponse}) => {
+const AnnotationConfidence = ({onSaveResponse, fName}) => {
     const handleSaveResponse = () => {
         onSaveResponse(response);
         setResponse(0);
@@ -335,7 +340,7 @@ const AnnotationConfidence = ({onSaveResponse}) => {
     return (
         <View style={styles.container}>
             <View style={styles.topSection}>
-                <Text style={styles.questionText}>username, how confident are you about the annotation you made?</Text>
+                <Text style={styles.questionText}>{fName}, how confident are you about the annotation you made?</Text>
                 {/* <Text style={styles.sliderValue}>{response}</Text> */}
                 <View style={styles.sliderContainer}>
                     <View style={[styles.sliderOptionContainer2, {width:'25%'}]}>
@@ -400,7 +405,7 @@ const AnnotationConfidence = ({onSaveResponse}) => {
     );
 };
 
-const EndAnnotation = ({onSaveResponse}) => {
+const EndAnnotation = ({onSaveResponse, fName}) => {
     const handleSaveResponse = () => {
         onSaveResponse(response);
         setResponse(0);
@@ -411,7 +416,7 @@ const EndAnnotation = ({onSaveResponse}) => {
     return (
         <View style={styles.container}>
             <View style={{justifyContent:"center"}}>
-                <Text style={styles.questionText}>Well done, username💪🏼</Text>
+                <Text style={styles.questionText}>Well done, {fName}💪🏼</Text>
                 <Text style={styles.questionText}>You have earned a badge!</Text>
             </View>
             <View style={[styles.invalidButton, styles.selectedOption ]}>
@@ -422,72 +427,131 @@ const EndAnnotation = ({onSaveResponse}) => {
     );
 };
 
-
-
-
-
 const AnnotationScreen = () => {
-    const user = auth.currentUser;
     const navigation = useNavigation();
+
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const userID = auth.currentUser?.uid;
 
     const [responses, setResponses] = useState({});
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [fName, setFName] = useState("");
+
+    useEffect(() => {
+        const userRef = doc(db, 'users', userID)
+
+        async function fetchData() {
+            const docSnap = await getDoc(userRef);
+    
+            if (docSnap.exists()) {
+                data = docSnap.data(); // Get the document data
+                if (data) { // Check if data exists (might be null or undefined)
+                setFName(data.name);
+                } else {
+                console.log("Document data is empty.");
+                }
+            } else {
+                console.log("No such document!");
+            }
+        }
+
+        fetchData();
+
+    }, [db, userID]);
 
     useEffect(() => {
         // Set up a listener for when the component unmounts to save responses if needed
         return () => {
-          if (currentIndex === 20) {
-            // saveResponsesToFirestore(responses);
+          if (currentIndex === 6) {
+            async function sendData() {
+      
+                const userRef = doc(db, "responses", userID);
+              
+                try {
+                    setResponses({});
+                  console.log(responses);
+                  // Rest of your code to save responses
+                  await setDoc(userRef, {
+                    timestamp: Timestamp.now(), // Convert timestamp to string (adjust format if needed)
+                    userID,
+                    responses // Spread existing responses (question1, question2, etc.)
+                  });
+                  console.log('Responses saved successfully!');
+                } catch (error) {
+                  // ...
+                }
+            }
+    
+            sendData();
             navigation.navigate('HomePage'); // Navigate back to HomeScreen after completing questions
           }
         };
-      }, [currentIndex, 3, responses, navigation]);
+      }, [currentIndex, responses, navigation, db, userID, app]);
     
       const handleSaveResponse = (response) => {
-        const updatedResponses = { ...responses };
-        updatedResponses[`question${currentIndex + 1}`] = response;
+        const updatedResponses = {
+          ...responses, // Only necessary if modifying existing responses within the loop
+          [`question${currentIndex + 1}`]: response,
+        };
         setResponses(updatedResponses);
-    
+      
         if (currentIndex < 6) {
           setCurrentIndex(currentIndex + 1);
-        } else {
-        //   saveResponsesToFirestore(updatedResponses);
-          navigation.navigate('HomePage'); // Navigate back to HomeScreen after completing questions
-        }
+        } 
       };
-    
-    //   const saveResponsesToFirestore = (responses) => {
-    //     firestore.collection('userResponses')
-    //       .add({
-    //         responses: responses,
-    //         userID: user.uid,
-    //         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    //         responseZero: responses['question1'],
-    //       })
-    //       .then((docRef) => {
-    //         console.log('Responses saved with ID: ', docRef.id);
-    //       })
-    //       .catch((error) => {
-    //         console.error('Error saving responses:', error);
+      
+    //   const saveResponsesToFirestore = async (responses, userID, app) => {
+    //     const db = getFirestore(app); // Assuming you have access to the Firestore instance
+      
+    //     const userResponseRef = doc(db, 'responses', userID);
+      
+    //     try {
+    //       console.log(responses);
+    //       await setDoc(userResponseRef, {
+    //         timestamp: Timestamp.now(), // Convert timestamp to string (adjust format if needed)
+    //         userID,
+    //         responses // Spread existing responses (question1, question2, etc.)
     //       });
+    //       console.log('Responses saved successfully!');
+    //       navigation.navigate('HomePage');
+    //     } catch (error) {
+    //       console.error('Error saving responses:', error);
+    //       // Handle the error (e.g., display message)
+    //     }
     //   };
+
+      const Placeholder = () => {
+        return (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={styles.questionText}>Loading user data...</Text>
+          </View>
+        );
+      };
 
       let componentToRender;
 
-      if (currentIndex === 0) {
-          componentToRender = <StressScale onSaveResponse={handleSaveResponse} />;
-      } else if (currentIndex === 1) {
-          componentToRender = <ValenceArousal onSaveResponse={handleSaveResponse} />;
-      } else if (currentIndex === 2) {
-          componentToRender = <FeelingSelect onSaveResponse={handleSaveResponse}/>;
-      } else if (currentIndex === 3) {
-        componentToRender = <Journal onSaveResponse={handleSaveResponse}/>;
-      } else if (currentIndex === 4){
-        componentToRender = <ActivitySelect onSaveResponse={handleSaveResponse}/>;
-      } else if (currentIndex === 5){
-        componentToRender = <AnnotationConfidence onSaveResponse={handleSaveResponse}/>;
+      if (!fName) {
+        // Show placeholder while fName is not available
+        componentToRender = <Placeholder />;
       } else {
-        componentToRender = <EndAnnotation onSaveResponse={handleSaveResponse}/>;
+        // Render actual components based on currentIndex
+        // ... your existing logic using currentIndex ...
+        if (currentIndex === 0) {
+            componentToRender = <StressScale onSaveResponse={handleSaveResponse} fName={fName}/>;
+        } else if (currentIndex === 1) {
+            componentToRender = <ValenceArousal onSaveResponse={handleSaveResponse} />;
+        } else if (currentIndex === 2) {
+            componentToRender = <FeelingSelect onSaveResponse={handleSaveResponse}/>;
+        } else if (currentIndex === 3) {
+          componentToRender = <Journal onSaveResponse={handleSaveResponse}/>;
+        } else if (currentIndex === 4){
+          componentToRender = <ActivitySelect onSaveResponse={handleSaveResponse} fName={fName}/>;
+        } else if (currentIndex === 5){
+          componentToRender = <AnnotationConfidence onSaveResponse={handleSaveResponse} fName={fName}/>;
+        } else {
+          componentToRender = <EndAnnotation onSaveResponse={handleSaveResponse} fName={fName}/>;
+        }
       }
   
       return (

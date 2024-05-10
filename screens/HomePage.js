@@ -8,6 +8,9 @@ import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, collection, getDoc, doc, Timestamp } from "firebase/firestore";
+import { app } from '../firebase/firebase';
 
 
 Notifications.setNotificationHandler({
@@ -21,7 +24,38 @@ Notifications.setNotificationHandler({
 const HomeScreen = () => {
     const navigation = useNavigation();
 
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const userID = auth.currentUser?.uid;
+
+    const [entityText, setEntityText] = useState('')
+    const [entities, setEntities] = useState([])
+    const [fName, setFName] = useState('')
     const [expoPushToken, setExpoPushToken] = useState('');
+
+
+    useEffect(() => {
+        const userRef = doc(db, 'users', userID)
+
+        async function fetchData() {
+            const docSnap = await getDoc(userRef);
+    
+            if (docSnap.exists()) {
+                data = docSnap.data(); // Get the document data
+                if (data) { // Check if data exists (might be null or undefined)
+                setFName(data.name); // Extract the name property
+                } else {
+                console.log("Document data is empty.");
+                }
+            } else {
+                console.log("No such document!");
+            }
+        }
+
+        fetchData();
+
+    }, [db, userID]);
 
     useEffect(() => {
         console.log("Registering for push notifications...");
@@ -103,6 +137,16 @@ const HomeScreen = () => {
             body: JSON.stringify(message),
         });
     }
+
+    function getFormattedDate() {
+        const currentDate = new Date();
+        const month = currentDate.toLocaleString('default', { month: 'long' });
+        const day = currentDate.getDate();
+        const year = currentDate.getFullYear();
+      
+        return `${month} ${day}, ${year}`;
+    }
+
     return (
         <View style={styles.container}>
             {/* Header Section */}
@@ -110,13 +154,13 @@ const HomeScreen = () => {
                 {/* Current System Date and Calendar Icon */}
                 <View style={styles.dateContainer}>
                     <Image source={icons.calendar} style={styles.calendarIcon} />
-                    <Text style={styles.dateText}>May 8, 2024</Text>
+                    <Text style={styles.dateText}>{getFormattedDate()}</Text>
                 </View>
                 {/* User Profile Picture, Greeting, and Notification Center Button */}
                 <View style={styles.profileContainer}>
                     <Image source={require('./profile_picture.png')} style={styles.profilePicture} />
                     <View>
-                        <Text style={styles.greeting}>Hello, User!</Text>
+                        <Text style={styles.greeting}>Hello, {fName}!</Text>
                         <Text style={styles.greeting}>How are you doing?😄</Text>
                     </View>
                     <TouchableOpacity style={styles.notificationButton}>
@@ -187,7 +231,7 @@ const HomeScreen = () => {
                 <TouchableOpacity style={[styles.tabItem, styles.floatingButton]}>
                     {/* Use icons.NAME for Floating Action Button Icon */}
                     <TouchableOpacity style={styles.annotationButton}
-                        onPress={() => navigation.navigate('Annotation', {})}>
+                        onPress={() => navigation.navigate('Annotation')}>
 
                     </TouchableOpacity>
                 </TouchableOpacity>
