@@ -14,6 +14,9 @@ import HomePage from './screens/HomePage'
 import { COLORS, icons, images, SIZES } from './constants'
 import { ScreenHeaderBtn } from './components/header/ScreenHeaderBtn'
 import { auth, firestore } from './firebase/firebase'
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import Constants from "expo-constants"; // Optional
 
 
 const Stack = createNativeStackNavigator();

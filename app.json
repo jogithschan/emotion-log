@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b27196fa-baaf-4079-a664-f31de6df3aac"
+      }
+    },
+    "owner": "jogith20072"
   }
 }
