@@ -163,12 +163,13 @@ const ValenceArousal = ({ onSaveResponse }) => {
 // check feelings for different options
 const FeelingSelect = ({ onSaveResponse }) => {
     const options = [
-        { "id": 1, "text": "Nervous" },
-        { "id": 2, "text": "Stressed" },
-        { "id": 3, "text": "Tensed" },
-        { "id": 4, "text": "Disgusted" },
-        { "id": 5, "text": "Angry" },
-        { "id": 6, "text": "Fearful" }
+        { "id": 1, "text": "Upset" },
+        { "id": 2, "text": "Nervous" },
+        { "id": 3, "text": "Stressed" },
+        { "id": 4, "text": "Tense" },
+        { "id": 5, "text": "Disgusted" },
+        { "id": 6, "text": "Angry" },
+        { "id": 7, "text": "Fearful" }
     ];
 
     const [selectedOptions, setSelectedOptions] = useState([]);
@@ -537,11 +538,11 @@ const AnnotationScreen = () => {
       } else {
         // Render actual components based on currentIndex
         // ... your existing logic using currentIndex ...
-        if (currentIndex === 0) {
+        if (currentIndex === 2) {
             componentToRender = <StressScale onSaveResponse={handleSaveResponse} fName={fName}/>;
-        } else if (currentIndex === 1) {
+        } else if (currentIndex === 0) {
             componentToRender = <ValenceArousal onSaveResponse={handleSaveResponse} />;
-        } else if (currentIndex === 2) {
+        } else if (currentIndex === 1) {
             componentToRender = <FeelingSelect onSaveResponse={handleSaveResponse}/>;
         } else if (currentIndex === 3) {
           componentToRender = <Journal onSaveResponse={handleSaveResponse}/>;
@@ -629,8 +630,8 @@ const styles = StyleSheet.create({
     optionButton: {
         borderWidth: 1,
         borderRadius: 8,
-        padding: 10,
-        marginBottom: 10,
+        padding: 15,
+        marginBottom: 30,
         borderColor: 'rgba(255, 255, 255, 0.5)',
         alignItems: 'center',
         width: "100%",
@@ -700,8 +701,8 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         width: "80%",
         height: "100%",
-        marginBottom: 20,
-        marginTop: 20,
+        marginBottom: 0,
+        marginTop: 10,
         padding: 10,
         justifyContent:"space-around",
     },

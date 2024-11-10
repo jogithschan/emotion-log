@@ -178,16 +178,19 @@ const HomeScreen = () => {
             {/* Main Screen Section */}
             <View style={styles.mainSection}>
                 {/* Widgets Displaying Information */}
-                <View style={styles.widgetContainer}>
+                {/* <View style={styles.widgetContainer}> */}
                     {/* Widget 1 */}
-                    <TouchableOpacity style={styles.homeWidget}
-                        onPress={sendNotification}>
-                        <Text style={styles.buttonText}>Widget 1</Text>
-                    </TouchableOpacity>
+                    {/* <TouchableOpacity style={styles.homeWidget} */}
+                        {/* onPress={sendNotification}> */}
+                        {/* <Text style={styles.buttonText}>Widget 1</Text> */}
+                    {/* </TouchableOpacity> */}
                     {/* Widget 2 */}
-                    <TouchableOpacity style={styles.homeWidget}>
-                        <Text style={styles.buttonText}>Widget 2</Text>
-                    </TouchableOpacity>
+                    {/* <TouchableOpacity style={styles.homeWidget}> */}
+                        {/* <Text style={styles.buttonText}>Widget 2</Text> */}
+                    {/* </TouchableOpacity> */}
+                {/* </View> */}
+                <View>
+                    <Text style={styles.bodyText}>Hello, {fName}! Happy to see you again thank you for being a part of this study and helping us annotating emotions!😊✨</Text>
                 </View>
                 {/* Emosnap Section */}
                 <Text style={styles.sectionHeading}>Upcoming EmoSnap</Text>
@@ -201,7 +204,7 @@ const HomeScreen = () => {
                     </TouchableOpacity>
                 </View>
                 {/* Reflection Journal Section */}
-                <Text style={styles.sectionHeading}>Reflection Journal</Text>
+                {/* <Text style={styles.sectionHeading}>Reflection Journal</Text>
                 <View style={styles.section}>
                 <View style={styles.buttonTextSection}>
                         <Text style={styles.buttonText}>Daily Reflection</Text>
@@ -210,7 +213,7 @@ const HomeScreen = () => {
                     <TouchableOpacity style={[styles.sectionButton, styles.disabledSectionButton]} disabled={true}>
                         <Image source={icons.lock} style={styles.buttonIcon} />
                     </TouchableOpacity>
-                </View>
+                </View> */}
             </View>
 
             {/* Tab Bar */}
@@ -218,35 +221,40 @@ const HomeScreen = () => {
                 {/* Section 1 Icon */}
                 <TouchableOpacity style={styles.tabItem}>
                     {/* Use icons.NAME for Section 1 Icon */}
-                    <Image source={icons.calendar} style={styles.tabIcon} />
+                    <Image source={icons.home} style={styles.tabIcon} />
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('HomePage')}>
+                    </TouchableOpacity>
                 </TouchableOpacity>
                 
                 {/* Section 2 Icon */}
-                <TouchableOpacity style={styles.tabItem}>
+                {/* <TouchableOpacity style={styles.tabItem}> */}
                     {/* Use icons.NAME for Section 2 Icon */}
-                    <Image source={icons.calendar} style={styles.tabIcon} />
-                </TouchableOpacity>
+                    {/* <Image source={icons.calendar} style={styles.tabIcon} />
+                </TouchableOpacity>*/}
                 
                 {/* Floating Action Button */}
                 <TouchableOpacity style={[styles.tabItem, styles.floatingButton]}>
                     {/* Use icons.NAME for Floating Action Button Icon */}
                     <TouchableOpacity style={styles.annotationButton}
                         onPress={() => navigation.navigate('Annotation')}>
-
                     </TouchableOpacity>
                 </TouchableOpacity>
                 
                 {/* Section 3 Icon */}
                 <TouchableOpacity style={styles.tabItem}>
                     {/* Use icons.NAME for Section 3 Icon */}
-                    <Image source={icons.calendar} style={styles.tabIcon} />
+                    <Image source={icons.profile} style={styles.tabIcon} />
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('Profile')}>
+                    </TouchableOpacity>
                 </TouchableOpacity>
                 
                 {/* Section 4 Icon */}
-                <TouchableOpacity style={styles.tabItem}>
+                {/* <TouchableOpacity style={styles.tabItem}> */}
                     {/* Use icons.NAME for Section 4 Icon */}
-                    <Image source={icons.calendar} style={styles.tabIcon} />
-                </TouchableOpacity>
+                    {/* <Image source={icons.calendar} style={styles.tabIcon} /> */}
+                {/* </TouchableOpacity> */}
             </View>
         </View>
     );
@@ -373,8 +381,8 @@ const styles = StyleSheet.create({
         paddingBottom: 40,
     },
     tabIcon: {
-        width:20,
-        height:20,
+        width:30,
+        height:30,
     },
     annotationButton: {
         width:70,
@@ -403,7 +411,13 @@ const styles = StyleSheet.create({
     },
     disabledSectionButton: {
         opacity:0.5,
-    }
+    },
+    bodyText: {
+        fontSize: 18,
+        color: '#ffffff', // White Text
+        marginBottom: 5,
+        fontStyle: 'italic',
+    },
 });
 
 export default HomeScreen;

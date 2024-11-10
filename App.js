@@ -11,6 +11,7 @@ import AnnotationScreen from './screens/AnnotationScreen'
 import OnboardingScreen from './screens/OnboardingScreen'
 import TimetableScreen from './screens/TimetableScreen'
 import HomePage from './screens/HomePage'
+import ProfileScreen from './screens/ProfileScreen'
 import { COLORS, icons, images, SIZES } from './constants'
 import { ScreenHeaderBtn } from './components/header/ScreenHeaderBtn'
 import { auth, firestore } from './firebase/firebase'
@@ -49,6 +50,7 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
         <Stack.Screen options={{ headerShown: false }} name="Annotation" component={AnnotationScreen} />
         <Stack.Screen options={{ headerShown: false }} name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen options={{ headerShown: false }} name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Timetable" component={TimetableScreen} />
       </Stack.Navigator>
     </NavigationContainer>
